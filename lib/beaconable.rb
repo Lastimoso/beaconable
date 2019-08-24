@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'beaconable/version'
+require 'beaconable/object_was'
 
 module Beaconable
   extend ActiveSupport::Concern
