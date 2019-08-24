@@ -2,6 +2,8 @@
 
 require 'beaconable/version'
 require 'beaconable/object_was'
+require 'beaconable/base_beacon'
+require 'active_record'
 
 module Beaconable
   extend ActiveSupport::Concern
