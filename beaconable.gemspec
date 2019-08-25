@@ -6,11 +6,11 @@ require "beaconable/version"
 Gem::Specification.new do |spec|
   spec.name          = "beaconable"
   spec.version       = Beaconable::VERSION
-  spec.authors       = ["Lastimoso"]
+  spec.authors       = ["Gerardo Raiden"]
   spec.email         = ["gerardoraiden@gmail.com"]
 
-  spec.summary       = %q{Small OO patern to isolate side-effects and call backs your your ActiveRecord Models}
-  spec.description   = %q{Small OO patern to isolate side-effects and call backs your your ActiveRecord Models}
+  spec.summary       = %q{Small OO patern to isolate side-effects and callbacks for your ActiveRecord Models}
+  spec.description   = %q{Small OO patern to isolate side-effects and callbacks for your ActiveRecord Models}
   spec.homepage      = "https://github.com/Lastimoso/beaconable"
   spec.license       = "MIT"
 
