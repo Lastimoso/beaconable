@@ -1,5 +1,7 @@
 # Beaconable
 
+[![Build Status](https://travis-ci.org/Lastimoso/beaconable.svg?branch=master)](https://travis-ci.org/Lastimoso/beaconable) [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
+
 Small OO patern to isolate side-effects and callbacks for your ActiveRecord Models.
 
 ## Installation
