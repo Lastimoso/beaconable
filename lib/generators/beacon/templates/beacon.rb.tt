@@ -2,10 +2,11 @@
 # frozen_string_literal: true
 
 class <%= class_name %>Beacon < Beaconable::BaseBeacon
-  alias <%= class_name.underscore %> object
-  alias <%= class_name.underscore %>_was object_was
+  alias <%= file_name %> object
+  alias <%= file_name %>_was object_was
 
   def call
+    # Put your callbacks and side-effects here
   end
 end
 <% end -%>
