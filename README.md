@@ -49,6 +49,7 @@ class UserBeacon < Beaconable::BaseBeacon
     UpdateExternalServiceJob.perform_later(self.id) if field_changed? :email
   end
 end
+```
 
 ## Development
 
