@@ -11,7 +11,7 @@ class BeaconGenerator < Rails::Generators::NamedBase
 
   def insert_inclusion_into_model_file
     inject_into_class "app/models/#{file_name}.rb", class_name do
-      '  include Beaconable\n'
+      "  include Beaconable\n"
     end
   end
 end
