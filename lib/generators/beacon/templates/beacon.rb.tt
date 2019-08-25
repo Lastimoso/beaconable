@@ -1,5 +1,11 @@
 <% module_namespacing do -%>
+# frozen_string_literal: true
+
 class <%= class_name %>Beacon < Beaconable::BaseBeacon
-  # Hello world
+  alias <%= class_name.underscore %> object
+  alias <%= class_name.underscore %>_was object_was
+
+  def call
+  end
 end
 <% end -%>
