@@ -19,8 +19,36 @@ Or install it yourself as:
     $ gem install beaconable
 
 ## Usage
+When you include Beaconable in your model it will fire your Beacon everytime after you create or save an entry. Inside your Beacon you have access to the following:
 
-TODO: Write usage instructions here
+- object (and an alias with the name of your model, i.e user): the instance of your object after changes.
+- object_was (and an alias with the name of your model, i.e. user_was): the instance of your object as it was before your changes
+- field_changed?(:field_name) : It allows you to check if a specific field was modified.
+- new_entry? : Returns true if the item saved is new 
+
+### Rails Generator
+You can use the bundled generator if you are using the library inside of
+a Rails project:
+
+    rails g beacon User
+
+This will do the following:
+1. Create a new beacon file in `app/beacons/user_beacon.rb`
+2. Will add "include Beaconable" in your User Model.
+
+
+### Beacon Definition
+
+```ruby
+class UserBeacon < Beaconable::BaseBeacon
+  alias user object 
+  alias user_was object_was
+  
+  def call
+    WelcomeUserJob.perform_later(self.id) if new_entry?
+    UpdateExternalServiceJob.perform_later(self.id) if field_changed? :email
+  end
+end
 
 ## Development
 
