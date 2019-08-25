@@ -1,0 +1,8 @@
+Description:
+    Generates a beacon for the given model.
+
+Example:
+    rails generate beacon User
+
+    This will create:
+        app/beacons/user_beacon.rb

@@ -1,0 +1,5 @@
+<% module_namespacing do -%>
+class <%= class_name %>Beacon < Beaconable::BaseBeacon
+  # Hello world
+end
+<% end -%>
