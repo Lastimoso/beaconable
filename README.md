@@ -26,6 +26,7 @@ When you include Beaconable in your model it will fire your Beacon everytime aft
 - object (and an alias with the name of your model, i.e user): the instance of your object after changes.
 - object_was (and an alias with the name of your model, i.e. user_was): the instance of your object as it was before your changes
 - field_changed?(:field_name) : It allows you to check if a specific field was modified.
+- any_field_changed?(:field_name, :other_field_name) : It allows you to check if any of multiple fields was modified.
 - new_entry? : Returns true if the item saved is new 
 
 ### Rails Generator
