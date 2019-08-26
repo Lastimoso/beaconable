@@ -5,6 +5,7 @@ require "minitest/spec"
 require "minitest/reporters"
 require "active_support"
 require "active_record"
+require "byebug"
 require "beaconable"
 
 Minitest::Reporters.use!
@@ -42,6 +43,7 @@ def setup_db
         t.string :email, :limit => 255, :null => false
         t.string :first_name, :limit => 100, :null => true
         t.string :last_name, :limit => 100, :null => true
+        t.timestamps null: false
       end
       create_table :side_effects do |t|
         t.string :name, limit: 255, null: false
