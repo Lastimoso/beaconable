@@ -5,7 +5,7 @@ require 'test_helper'
 class BeaconableTest < Minitest::Test
   def setup
     setup_db
-    @user = User.create(first_name: 'John', last_name: 'Rambo', email: 'rambo@gmail.com')
+    @user = User.create(first_name: 'John', last_name: 'Rambo', email: 'john@rambo.com')
     SideEffect.destroy_all
   end
 
@@ -18,7 +18,7 @@ class BeaconableTest < Minitest::Test
   end
 
   def test_object_creation_fire_beacon
-    User.create(first_name: 'Jack', last_name: 'Bauer', email: 'bauer@gmail.com') 
+    User.create(first_name: 'Jack', last_name: 'Bauer', email: 'bauer@gmail.com')
     assert SideEffect.find_by(name: 'default').success?
   end
 
