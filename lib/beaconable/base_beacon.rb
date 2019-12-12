@@ -25,5 +25,24 @@ module Beaconable
     def new_entry?
       object_was.created_at.nil?
     end
+
+    def field_changed(field)
+      @field = field
+      @result = field_changed? field
+      self
+    end
+
+    def from(*values)
+      return self if @result == false
+
+      @result = values.include? object_was.send(@field)
+      self
+    end
+
+    def to(*values)
+      return false if @result == false
+
+      values.include? object.send(@field)
+    end
   end
 end
