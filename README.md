@@ -27,7 +27,10 @@ When you include Beaconable in your model it will fire your Beacon everytime aft
 - object_was (and an alias with the name of your model, i.e. user_was): the instance of your object as it was before your changes
 - field_changed?(:field_name) : It allows you to check if a specific field was modified.
 - any_field_changed?(:field_name, :other_field_name) : It allows you to check if any of multiple fields was modified.
-- new_entry? : Returns true if the item saved is new 
+- new_entry? : Returns true if the item saved is new
+
+You can also used the following chained methods
+- field_change(:field_name).from('first_alternative', 'n_alternative').to('first_alternative_for_to', 'second_alternative_for_to', 'n_alternative_for_toq')
 
 ### Rails Generator
 You can use the bundled generator if you are using the library inside of
@@ -44,9 +47,9 @@ This will do the following:
 
 ```ruby
 class UserBeacon < Beaconable::BaseBeacon
-  alias user object 
+  alias user object
   alias user_was object_was
-  
+
   def call
     WelcomeUserJob.perform_later(self.id) if new_entry?
     UpdateExternalServiceJob.perform_later(self.id) if field_changed? :email
