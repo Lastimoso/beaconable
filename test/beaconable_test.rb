@@ -24,11 +24,35 @@ class BeaconableTest < Minitest::Test
 
   def test_new_first_name_should_fire_specific_sideeffect
     @user.update(first_name: 'Jack')
-    assert SideEffect.find_by(name: 'new_first_name').success?, 'New first name should fire specific side-effect'
+    assert SideEffect.find_by(name: 'new_first_name').success?,
+           'New first name should fire specific side-effect'
   end
 
   def test_new_last_name_should_not_fire_specific_sideeffect
     @user.update(last_name: 'Jack')
-    assert SideEffect.find_by(name: 'new_first_name').nil?, 'New Last Name should not fire new_first_name side-effect'
+    assert SideEffect.find_by(name: 'new_first_name').nil?,
+           'New Last Name should not fire new_first_name side-effect'
   end
+
+  def test_chained_methods_should_fire_specific_sideeffect
+    @user.update(email: 'peter@parker.com')
+    assert SideEffect.find_by(name: 'nested_conditions').success?,
+           'It should fire side-effect if every condition is met'
+  end
+
+  def test_chained_methods_should_not_fire_sideeffect_if_from_false
+    @user = User.create(first_name: 'John', last_name: 'Wick', email: 'john@wick.com')
+    SideEffect.destroy_all
+
+    @user.update(email: 'peter@parker.com')
+    assert SideEffect.find_by(name: 'nested_conditions').nil?,
+           'It should not fire side-effect if from is false'
+  end
+
+  def test_chained_methods_should_not_fire_sideeffect_if_to_false
+    @user.update(email: 'jack@bauer.com')
+    assert SideEffect.find_by(name: 'nested_conditions').nil?,
+    'It should not fire side-effect if to is false'
+  end
+
 end

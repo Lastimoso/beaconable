@@ -27,12 +27,23 @@ class UserBeacon < Beaconable::BaseBeacon
   def call
     SideEffect.create(name: 'default', success: true)
     test_field_changed
+    test_chained_methods
   end
 
   private
 
   def test_field_changed
     SideEffect.create(name: 'new_first_name', success: true) if field_changed?(:first_name)
+  end
+
+  def test_chained_methods
+    SideEffect.create(name: 'nested_conditions', success: true) if chained_methods_conditions?
+  end
+
+  def chained_methods_conditions?
+    field_changed(:email)
+      .from('john@rambo.com', 'jack@bauer.com')
+      .to('peter@parker.com', 'john@wick.com')
   end
 end
 
