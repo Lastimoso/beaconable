@@ -23,7 +23,7 @@ module Beaconable
     end
 
     def to(*values)
-      @result || values.include?(object.send(@field))
+      @result && values.include?(object.send(@field))
     end
 
     private
