@@ -15,12 +15,13 @@ module Beaconable
   private
 
   def save_for_beacon
-    @object_was = ObjectWas.new(self).call
+    @object_was ||= ObjectWas.new(self).call
   end
 
   def fire_beacon
     if self.saved_changes?
       "#{self.class.name}Beacon".constantize.new(self, @object_was).call
     end
+    @object_was = nil
   end
 end

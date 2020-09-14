@@ -23,7 +23,10 @@ class BeaconableTest < Minitest::Test
   end
 
   def test_new_first_name_should_fire_specific_sideeffect
-    @user.update(first_name: 'Jack')
+    ActiveRecord::Base.transaction do
+      @user.update(first_name: 'Jack')
+      @user.update(last_name: 'Roger')
+    end
     assert SideEffect.find_by(name: 'new_first_name').success?,
            'New first name should fire specific side-effect'
   end
