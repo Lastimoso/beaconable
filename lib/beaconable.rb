@@ -19,9 +19,7 @@ module Beaconable
   end
 
   def fire_beacon
-    if self.saved_changes?
-      "#{self.class.name}Beacon".constantize.new(self, @object_was).call
-    end
+    "#{self.class.name}Beacon".constantize.new(self, @object_was).call
     @object_was = nil
   end
 end
