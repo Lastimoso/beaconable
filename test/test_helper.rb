@@ -28,9 +28,14 @@ class UserBeacon < Beaconable::BaseBeacon
     SideEffect.create(name: 'default', success: true)
     test_field_changed
     test_chained_methods
+    test_destroyed_record
   end
 
   private
+
+  def test_destroyed_record
+    SideEffect.create(name: 'destroyed_user', success: true) if destroyed_entry?
+  end
 
   def test_field_changed
     SideEffect.create(name: 'new_first_name', success: true) if field_changed?(:first_name)

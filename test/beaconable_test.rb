@@ -17,6 +17,11 @@ class BeaconableTest < Minitest::Test
     refute_nil ::Beaconable::VERSION
   end
 
+  def test_object_destruction_fire_beacon
+    @user.destroy
+    assert SideEffect.find_by(name: 'destroyed_user').success?
+  end
+
   def test_object_creation_fire_beacon
     User.create(first_name: 'Jack', last_name: 'Bauer', email: 'bauer@gmail.com')
     assert SideEffect.find_by(name: 'default').success?
@@ -57,5 +62,4 @@ class BeaconableTest < Minitest::Test
     assert SideEffect.find_by(name: 'nested_conditions').nil?,
     'It should not fire side-effect if to is false'
   end
-
 end

@@ -28,6 +28,10 @@ module Beaconable
 
     private
 
+    def destroyed_entry?
+      object.destroyed?
+    end
+
     def field_changed?(field)
       object.send(field) != object_was.send(field)
     end

@@ -9,6 +9,7 @@ module Beaconable
   extend ActiveSupport::Concern
   included do
     before_save :save_for_beacon
+    before_destroy :save_for_beacon
     after_commit :fire_beacon
   end
 
