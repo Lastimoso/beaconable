@@ -62,4 +62,12 @@ class BeaconableTest < Minitest::Test
     assert SideEffect.find_by(name: 'nested_conditions').nil?,
     'It should not fire side-effect if to is false'
   end
+
+  def test_no_beacon_fired_if_skip_beacon_is_true
+    user = User.new(first_name: 'Jack', last_name: 'Bauer', email: 'bauer@gmail.com')
+    user.skip_beacon = true
+    user.save!
+
+    assert_nil SideEffect.find_by(name: 'default')
+  end
 end

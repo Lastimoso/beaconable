@@ -1,3 +1,15 @@
+## 0.3.3 (2020-11-02)
+
+-  Fixes a bug that causes an error when a beaconable was touch by an association without changes
+
+### Improvements
+- Add `#skip_beacon` method to included clases
+
+## 0.3.2 (2020-10-07)
+
+### Improvements
+- Add `#destroyed_entry?` method
+
 ## 0.3.1 (2020-09-16)
 
 - Fixes #fire_beacon not to use dirty attributes to check changes

@@ -28,6 +28,7 @@ When you include Beaconable in your model it will fire your Beacon everytime aft
 - field_changed?(:field_name) : It allows you to check if a specific field was modified.
 - any_field_changed?(:field_name, :other_field_name) : It allows you to check if any of multiple fields was modified.
 - new_entry? : Returns true if the item saved is new
+- destroyed_entry? :  Returns true if the item has been destroyed
 
 You can also used the following chained methods
 - field_change(:field_name).from('first_alternative', 'n_alternative').to('first_alternative_for_to', 'second_alternative_for_to', 'n_alternative_for_toq')

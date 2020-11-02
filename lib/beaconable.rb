@@ -8,9 +8,12 @@ require 'active_record'
 module Beaconable
   extend ActiveSupport::Concern
   included do
-    before_save :save_for_beacon
-    before_destroy :save_for_beacon
-    after_commit :fire_beacon
+    attr_accessor :skip_beacon
+
+    before_save :save_for_beacon, unless: :skip_beacon
+    before_destroy :save_for_beacon, unless: :skip_beacon
+    after_touch :save_for_beacon, unless: :skip_beacon
+    after_commit :fire_beacon, unless: :skip_beacon
   end
 
   private
