@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    beaconable (0.3.2)
+    beaconable (0.3.3)
       activerecord (>= 4.0)
 
 GEM
