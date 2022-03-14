@@ -68,6 +68,30 @@ You can skip beacon calls if you pass true to the method `#skip_beacon`. I.E:
  user.save # The user beacon won't be fired.
 ```
 
+### Beacon metadata
+
+You can pass `beacon_metadata` to the `object` that will be available on the **Beacon**.
+
+```ruby
+User.create(email: "new_user@email.com", skip_welcome_user_job: true)
+
+# app/beacons/user_beacon.rb
+class UserBeacon < Beaconable::BaseBeacon
+  alias user object
+  alias user_was object_was
+
+  def call
+    WelcomeUserJob.perform_later(self.id) if should_perform_welcome_user_job?
+    UpdateExternalServiceJob.perform_later(self.id) if field_changed? :email
+  end
+
+  private
+
+  def should_perform_welcome_user_job?
+    new_entry? && !beacon_metadata[:skip_welcome_user_job]
+  end
+end
+```
 
 ## Development
 

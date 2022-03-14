@@ -25,7 +25,11 @@ class UserBeacon < Beaconable::BaseBeacon
   alias user_was object_was
 
   def call
-    SideEffect.create(name: 'default', success: true)
+    SideEffect.create(
+      name: 'default',
+      success: true,
+      source: beacon_metadata[:source]
+    )
     test_field_changed
     test_chained_methods
     test_destroyed_record
@@ -64,6 +68,7 @@ def setup_db
       create_table :side_effects do |t|
         t.string :name, limit: 255, null: false
         t.boolean :success, default: false
+        t.string :source, limit: 255
       end
     end
   end

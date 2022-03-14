@@ -8,6 +8,7 @@ require 'active_record'
 module Beaconable
   extend ActiveSupport::Concern
   included do
+    attr_accessor :beacon_metadata
     attr_accessor :skip_beacon
 
     before_save :save_for_beacon, unless: :skip_beacon
@@ -22,8 +23,13 @@ module Beaconable
     @object_was ||= ObjectWas.new(self).call
   end
 
+  def metadata_for_beacon
+    @beacon_metadata ||= {}
+  end
+
   def fire_beacon
-    "#{self.class.name}Beacon".constantize.new(self, @object_was).call
+    "#{self.class.name}Beacon".constantize.new(self, @object_was, metadata_for_beacon).call
     @object_was = nil
+    @beacon_metadata = nil
   end
 end

@@ -2,11 +2,12 @@
 
 module Beaconable
   class BaseBeacon
-    attr_reader :object, :object_was
+    attr_reader :object, :object_was, :beacon_metadata
 
-    def initialize(object, object_was)
+    def initialize(object, object_was, beacon_metadata = {})
       @object = object
       @object_was = object_was
+      @beacon_metadata = beacon_metadata
     end
 
     def field_changed(field)
