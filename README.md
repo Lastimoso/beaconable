@@ -74,7 +74,7 @@ You can pass `beacon_metadata` to the `object` that will be available on the **B
 
 Some uses might be:
 
-- to determine wether a certain action should be performed or not. For example when creating users in batch actions or in through the console you might want to skip just the welcome email but still perform all the other side effects associated with the user creation.
+- to determine whether a certain action should be performed or not. For example when creating users in batch actions or in through the console you might want to skip just the welcome email but still perform all the other side effects associated with the user creation.
 - to pass information that is generated / available in memory, will not be persisted in the model but is relevant in the side effects. For example, if you want to implement your own event logging system you could pass the current user id from the controller action to the beacon where you are going to create the Event.
 
 ```ruby
