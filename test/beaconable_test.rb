@@ -70,4 +70,21 @@ class BeaconableTest < Minitest::Test
 
     assert_nil SideEffect.find_by(name: 'default')
   end
+
+  def test_beacon_metadata_is_set_at_the_instance_and_available_at_the_beacon
+    user = User.new(first_name: 'Jack', last_name: 'Bauer', email: 'bauer@gmail.com')
+    user.beacon_metadata = { source: 'api' }
+    user.save!
+    side_effect = SideEffect.find_by(name: 'default')
+
+    assert_equal 'api', side_effect.source
+  end
+
+  def test_beacon_metadata_should_be_cleared_after_the_beacon_is_fired
+    user = User.new(first_name: 'Jack', last_name: 'Bauer', email: 'bauer@gmail.com')
+    user.beacon_metadata = { source: 'api' }
+    user.save!
+
+    assert_nil user.beacon_metadata
+  end
 end

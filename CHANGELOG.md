@@ -1,3 +1,9 @@
+## 0.3.4 (2022-03-14)
+
+### Improvements
+
+- Add `#beacon_metadata` & `#beacon_metadata=` method to included classes
+
 ## 0.3.3 (2020-11-02)
 
 -  Fixes a bug that causes an error when a beaconable was touch by an association without changes

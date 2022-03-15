@@ -68,6 +68,55 @@ You can skip beacon calls if you pass true to the method `#skip_beacon`. I.E:
  user.save # The user beacon won't be fired.
 ```
 
+### Beacon metadata
+
+You can pass `beacon_metadata` to the `object` that will be available on the **Beacon**.
+
+Some uses might be:
+
+- to determine whether a certain action should be performed or not. For example when creating users in batch actions or in through the console you might want to skip just the welcome email but still perform all the other side effects associated with the user creation.
+- to pass information that is generated / available in memory, will not be persisted in the model but is relevant in the side effects. For example, if you want to implement your own event logging system you could pass the current user id from the controller action to the beacon where you are going to create the Event.
+
+```ruby
+User.create(
+  email: "new_user@email.com",
+  beacon_metadata: {
+    skip_welcome_user_job: true,
+    triggered_by: "admin@myapp.com"
+  }
+)
+
+# app/beacons/user_beacon.rb
+class UserBeacon < Beaconable::BaseBeacon
+  alias user object
+  alias user_was object_was
+
+  def call
+    WelcomeUserJob.perform_later(self.id) if should_perform_welcome_user_job?
+    UpdateExternalServiceJob.perform_later(self.id) if field_changed? :email
+    Event.create do |event|
+      event.content = UserSerializer.new(user).event_content
+      event.ocurred_at = user.updated_at
+      if beacon_metadata.present?
+        event.triggered_by = beacon_metadata.dig(:triggered_by)
+        event.source = beacon_metadata.dig(:source)
+      end
+    end
+  end
+
+  private
+
+  def should_perform_welcome_user_job?
+    new_entry? && !skip_welcome_user_job?
+  end
+
+  def skip_welcome_user_job?
+    beacon_metadata[:skip_welcome_user_job] if beacon_metadata.present?
+  end
+end
+```
+
+**Important**: once the beacon has been _fired_ the `beacon_metadata` will be cleared.
 
 ## Development
 
