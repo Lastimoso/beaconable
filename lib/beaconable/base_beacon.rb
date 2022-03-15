@@ -4,10 +4,10 @@ module Beaconable
   class BaseBeacon
     attr_reader :object, :object_was, :beacon_metadata
 
-    def initialize(object, object_was, beacon_metadata = {})
+    def initialize(object, object_was)
       @object = object
       @object_was = object_was
-      @beacon_metadata = beacon_metadata
+      @beacon_metadata = object.beacon_metadata
     end
 
     def field_changed(field)
@@ -47,6 +47,5 @@ module Beaconable
     def new_entry?
       object_was.created_at.nil?
     end
-
   end
 end

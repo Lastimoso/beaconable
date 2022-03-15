@@ -20,16 +20,17 @@ class SideEffect < ActiveRecord::Base
 end
 
 class UserBeacon < Beaconable::BaseBeacon
-
   alias user object
   alias user_was object_was
 
   def call
-    SideEffect.create(
-      name: 'default',
-      success: true,
-      source: beacon_metadata[:source]
-    )
+    SideEffect.create do |side_effect|
+      side_effect.name = 'default'
+      side_effect.success = true
+      if beacon_metadata.present?
+        side_effect.source = beacon_metadata.dig(:source)
+      end
+    end
     test_field_changed
     test_chained_methods
     test_destroyed_record

@@ -23,13 +23,9 @@ module Beaconable
     @object_was ||= ObjectWas.new(self).call
   end
 
-  def metadata_for_beacon
-    @beacon_metadata ||= {}
-  end
-
   def fire_beacon
-    "#{self.class.name}Beacon".constantize.new(self, @object_was, metadata_for_beacon).call
+    "#{self.class.name}Beacon".constantize.new(self, @object_was).call
     @object_was = nil
-    @beacon_metadata = nil
+    self.beacon_metadata = nil
   end
 end
