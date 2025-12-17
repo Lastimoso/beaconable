@@ -1,6 +1,6 @@
 # Beaconable
 
-[![Gem Version](https://badge.fury.io/rb/beaconable.svg)](https://badge.fury.io/rb/beaconable) [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/Lastimoso/beaconable/issues)
+[![Gem Version](https://badge.fury.io/rb/beaconable.svg)](https://badge.fury.io/rb/beaconable) [![Tests](https://github.com/Lastimoso/beaconable/actions/workflows/test.yml/badge.svg)](https://github.com/Lastimoso/beaconable/actions/workflows/test.yml) [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/Lastimoso/beaconable/issues)
 
 A lightweight Ruby gem that provides an elegant, object-oriented pattern for isolating side-effects and callbacks from your ActiveRecord models.
 
