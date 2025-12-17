@@ -87,4 +87,57 @@ class BeaconableTest < Minitest::Test
 
     assert_nil user.beacon_metadata
   end
+
+  # Critical test: multiple saves in a transaction should capture the FIRST state
+  def test_multiple_saves_in_transaction_captures_first_state
+    # @user.first_name is 'John' at this point
+    ActiveRecord::Base.transaction do
+      @user.update!(first_name: 'Changed1')
+      @user.update!(first_name: 'Changed2')
+      @user.update!(first_name: 'Changed3')
+    end
+
+    # The beacon should see the change from original 'John', not intermediate values
+    # This is verified by the 'new_first_name' side effect being created
+    assert SideEffect.exists?(name: 'new_first_name'),
+           'Multiple saves in transaction should detect change from original state'
+  end
+
+  def test_multiple_different_field_changes_in_transaction
+    # Original: first_name='John', email='john@rambo.com'
+    ActiveRecord::Base.transaction do
+      @user.update!(first_name: 'Changed')
+      @user.update!(email: 'peter@parker.com')  # This matches the chained condition
+    end
+
+    assert SideEffect.exists?(name: 'new_first_name'),
+           'Should detect first_name changed from original'
+    assert SideEffect.exists?(name: 'nested_conditions'),
+           'Should detect email changed from john@rambo.com to peter@parker.com'
+  end
+
+  def test_touch_fires_beacon
+    SideEffect.destroy_all
+    @user.touch
+    assert SideEffect.exists?(name: 'default'),
+           'Touch should fire the beacon'
+  end
+
+  def test_skip_beacon_on_update
+    SideEffect.destroy_all
+    @user.skip_beacon = true
+    @user.update!(first_name: 'Skipped')
+
+    refute SideEffect.exists?(name: 'new_first_name'),
+           'Update with skip_beacon should not fire beacon'
+  end
+
+  def test_skip_beacon_on_destroy
+    SideEffect.destroy_all
+    @user.skip_beacon = true
+    @user.destroy
+
+    refute SideEffect.exists?(name: 'destroyed_user'),
+           'Destroy with skip_beacon should not fire beacon'
+  end
 end

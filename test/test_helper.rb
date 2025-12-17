@@ -5,7 +5,7 @@ require "minitest/spec"
 require "minitest/reporters"
 require "active_support"
 require "active_record"
-require "byebug"
+require "debug"
 require "beaconable"
 
 Minitest::Reporters.use!
