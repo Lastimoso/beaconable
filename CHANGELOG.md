@@ -1,3 +1,25 @@
+## 1.0.0.alpha (2025-12-17)
+
+### Breaking Changes
+
+- **Minimum Ruby version:** 3.2.0
+- **Minimum Rails version:** 7.0
+
+### Changed
+
+- Replaced `OpenStruct` with new `AttributeSnapshot` class for better performance and explicit immutability
+- `ObjectWas` now uses modern Rails 7+ dirty tracking API (`changes_to_save`) instead of iterating columns with `_was` methods
+- Updated development dependencies to modern versions
+- Fixed typo in gemspec: "patern" → "pattern"
+
+### Why this change?
+
+- `OpenStruct` is no longer auto-loaded in Ruby 3.2+ and shows deprecation warnings
+- Modern Rails provides cleaner dirty tracking APIs
+- This release marks the gem as stable and production-ready
+
+---
+
 ## 0.3.4 (2022-03-14)
 
 ### Improvements

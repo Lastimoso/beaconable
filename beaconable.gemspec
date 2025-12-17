@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Gerardo Raiden"]
   spec.email         = ["gerardoraiden@gmail.com"]
 
-  spec.summary       = %q{Small OO patern to isolate side-effects and callbacks for your ActiveRecord Models}
-  spec.description   = %q{Small OO patern to isolate side-effects and callbacks for your ActiveRecord Models}
+  spec.summary       = %q{Small OO pattern to isolate side-effects and callbacks for your ActiveRecord Models}
+  spec.description   = %q{Small OO pattern to isolate side-effects and callbacks for your ActiveRecord Models}
   spec.homepage      = "https://github.com/Lastimoso/beaconable"
   spec.license       = "MIT"
 
@@ -30,13 +30,15 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency 'activerecord', '>= 4.0'
+  spec.required_ruby_version = '>= 3.2.0'
 
-  spec.add_development_dependency 'bundler', '~> 1.16'
+  spec.add_dependency 'activerecord', '>= 7.0'
+
+  spec.add_development_dependency 'bundler', '>= 2.0'
   spec.add_development_dependency 'minitest', '~> 5.0'
-  spec.add_development_dependency 'minitest-reporters', '~> 1.3'
+  spec.add_development_dependency 'minitest-reporters', '~> 1.6'
   spec.add_development_dependency 'rake', '~> 13.0'
-  spec.add_development_dependency 'rubocop', '~> 0.74.0'
-  spec.add_development_dependency 'sqlite3', '~> 1.3'
-  spec.add_development_dependency 'byebug', '~> 10.0'
+  spec.add_development_dependency 'sqlite3', '~> 2.0'
+  spec.add_development_dependency 'debug', '~> 1.8'
+  spec.add_development_dependency 'rubocop', '~> 1.50'
 end

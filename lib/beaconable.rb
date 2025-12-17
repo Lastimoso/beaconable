@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
-require 'beaconable/version'
-require 'beaconable/object_was'
-require 'beaconable/base_beacon'
-require 'active_record'
+require "beaconable/version"
+require "beaconable/attribute_snapshot"
+require "beaconable/object_was"
+require "beaconable/base_beacon"
+require "active_record"
 
 module Beaconable
   extend ActiveSupport::Concern
+
   included do
     attr_accessor :beacon_metadata
     attr_accessor :skip_beacon

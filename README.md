@@ -1,8 +1,26 @@
 # Beaconable
 
-[![Build Status](https://travis-ci.org/Lastimoso/beaconable.svg?branch=master)](https://travis-ci.org/Lastimoso/beaconable) [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
+[![Gem Version](https://badge.fury.io/rb/beaconable.svg)](https://badge.fury.io/rb/beaconable) [![CI](https://github.com/Lastimoso/beaconable/actions/workflows/test.yml/badge.svg)](https://github.com/Lastimoso/beaconable/actions/workflows/test.yml) [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/Lastimoso/beaconable/issues)
 
-Small OO patern to isolate side-effects and callbacks for your ActiveRecord Models.
+A lightweight Ruby gem that provides an elegant, object-oriented pattern for isolating side-effects and callbacks from your ActiveRecord models.
+
+## Why Beaconable?
+
+ActiveRecord callbacks (`after_save`, `after_commit`, etc.) are convenient, but they can quickly turn your models into tangled messes of business logic, external API calls, and notification triggers. Before you know it, your `User` model is sending emails, syncing with Salesforce, updating Elasticsearch, and making your tests take forever.
+
+**Beaconable solves this by:**
+
+- **Separating concerns** — Side-effects live in dedicated Beacon classes, not your models
+- **Improving testability** — Test your model logic and side-effects independently
+- **Providing context** — Your Beacon knows exactly what changed (`object_was` vs `object`)
+- **Keeping models lean** — Your ActiveRecord models stay focused on data and validations
+- **Offering flexibility** — Skip beacons when needed, pass metadata for conditional logic
+
+
+## Requirements
+
+- Ruby >= 3.2.0
+- Rails >= 7.0
 
 ## Installation
 
@@ -118,6 +136,85 @@ end
 
 **Important**: once the beacon has been _fired_ the `beacon_metadata` will be cleared.
 
+### Multiple saves in a transaction (a.k.a. "Please don't do this")
+
+> **Fair warning:** If you're doing multiple saves on the same record within a single transaction, you might want to reconsider your life choices. But hey, we don't judge — we just handle it gracefully.
+
+Beaconable captures the state of your object at the **first** `before_save` and holds onto it until `after_commit`. This means that if you do something like this:
+
+```ruby
+ActiveRecord::Base.transaction do
+  user.update!(status: 'pending')
+  user.update!(status: 'verified')
+  user.update!(status: 'active')
+end
+```
+
+Your beacon will see:
+- `object.status` → `'active'` (the final value)
+- `object_was.status` → whatever it was **before** the transaction started
+
+This is intentional! We track the change from the **original state** to the **final committed state**, not the intermediate chaos in between.
+
+```ruby
+# In your beacon:
+def call
+  if field_changed?(:status)
+    # This will be true if status changed from its original value
+    # to the final committed value — regardless of how many
+    # intermediate updates happened
+    NotifyStatusChange.perform_later(user.id)
+  end
+end
+```
+
+**Why?** Because Rails' native `saved_changes` only shows the last save, which would miss the fact that `status` changed at all if only the first update modified it. We've got your back.
+
+## Known Limitations
+
+### Encrypted columns with non-deterministic encryption
+
+If you're using Rails encrypted attributes with a non-deterministic algorithm, `field_changed?` will return `true` even when the plaintext value hasn't changed. This happens because the ciphertext changes on every save:
+
+```ruby
+bank_account.routing_number = bank_account.routing_number  # Same value!
+bank_account.changes_to_save
+# => {"routing_number_ciphertext" => ["QnPUYDD...", "IDZIchs..."]}
+```
+
+The underlying ciphertext is different, so Rails (and Beaconable) sees it as a change. If this is a problem for your use case, consider using deterministic encryption for those columns, or handle the comparison manually in your beacon.
+
+### Store accessor attributes
+
+Attributes defined via `store_accessor` are not directly supported by `field_changed?`. Rails tracks changes on the underlying store column, not on individual accessor keys:
+
+```ruby
+# Given: store_accessor :data_store, :a_store_attribute
+
+user.a_store_attribute = "hello"
+user.changes_to_save
+# => {"data_store" => [{}, {"a_store_attribute" => "hello"}]}
+
+# In your beacon:
+field_changed?(:a_store_attribute)  # => false (won't work)
+field_changed?(:data_store)         # => true (works, but less precise)
+```
+
+**Workaround:** Check the underlying store column and inspect its contents:
+
+```ruby
+def call
+  if field_changed?(:data_store)
+    old_store = object_was[:data_store] || {}
+    new_store = object.data_store || {}
+
+    if old_store["a_store_attribute"] != new_store["a_store_attribute"]
+      # Handle the change
+    end
+  end
+end
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
@@ -126,7 +223,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/beaconable. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/Lastimoso/beaconable. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
@@ -134,4 +231,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the Beaconable project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/beaconable/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the Beaconable project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/Lastimoso/beaconable/blob/main/CODE_OF_CONDUCT.md).
