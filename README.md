@@ -170,6 +170,51 @@ end
 
 **Why?** Because Rails' native `saved_changes` only shows the last save, which would miss the fact that `status` changed at all if only the first update modified it. We've got your back.
 
+## Known Limitations
+
+### Encrypted columns with non-deterministic encryption
+
+If you're using Rails encrypted attributes with a non-deterministic algorithm, `field_changed?` will return `true` even when the plaintext value hasn't changed. This happens because the ciphertext changes on every save:
+
+```ruby
+bank_account.routing_number = bank_account.routing_number  # Same value!
+bank_account.changes_to_save
+# => {"routing_number_ciphertext" => ["QnPUYDD...", "IDZIchs..."]}
+```
+
+The underlying ciphertext is different, so Rails (and Beaconable) sees it as a change. If this is a problem for your use case, consider using deterministic encryption for those columns, or handle the comparison manually in your beacon.
+
+### Store accessor attributes
+
+Attributes defined via `store_accessor` are not directly supported by `field_changed?`. Rails tracks changes on the underlying store column, not on individual accessor keys:
+
+```ruby
+# Given: store_accessor :data_store, :a_store_attribute
+
+user.a_store_attribute = "hello"
+user.changes_to_save
+# => {"data_store" => [{}, {"a_store_attribute" => "hello"}]}
+
+# In your beacon:
+field_changed?(:a_store_attribute)  # => false (won't work)
+field_changed?(:data_store)         # => true (works, but less precise)
+```
+
+**Workaround:** Check the underlying store column and inspect its contents:
+
+```ruby
+def call
+  if field_changed?(:data_store)
+    old_store = object_was[:data_store] || {}
+    new_store = object.data_store || {}
+
+    if old_store["a_store_attribute"] != new_store["a_store_attribute"]
+      # Handle the change
+    end
+  end
+end
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
