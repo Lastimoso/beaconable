@@ -2,7 +2,7 @@
 
 ### Breaking Changes
 
-- **Minimum Ruby version:** 3.0.0
+- **Minimum Ruby version:** 3.2.0
 - **Minimum Rails version:** 7.0
 
 ### Changed

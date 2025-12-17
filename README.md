@@ -19,7 +19,7 @@ ActiveRecord callbacks (`after_save`, `after_commit`, etc.) are convenient, but 
 
 ## Requirements
 
-- Ruby >= 3.0.0
+- Ruby >= 3.2.0
 - Rails >= 7.0
 
 ## Installation
