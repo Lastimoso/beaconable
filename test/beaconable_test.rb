@@ -60,7 +60,7 @@ class BeaconableTest < Minitest::Test
   def test_chained_methods_should_not_fire_sideeffect_if_to_false
     @user.update(email: 'jack@bauer.com')
     assert SideEffect.find_by(name: 'nested_conditions').nil?,
-    'It should not fire side-effect if to is false'
+           'It should not fire side-effect if to is false'
   end
 
   def test_no_beacon_fired_if_skip_beacon_is_true
@@ -107,7 +107,7 @@ class BeaconableTest < Minitest::Test
     # Original: first_name='John', email='john@rambo.com'
     ActiveRecord::Base.transaction do
       @user.update!(first_name: 'Changed')
-      @user.update!(email: 'peter@parker.com')  # This matches the chained condition
+      @user.update!(email: 'peter@parker.com') # This matches the chained condition
     end
 
     assert SideEffect.exists?(name: 'new_first_name'),

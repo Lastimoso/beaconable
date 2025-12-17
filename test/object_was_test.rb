@@ -59,7 +59,7 @@ class ObjectWasTest < Minitest::Test
   end
 
   def test_object_was_does_not_change_after_save
-    original_first_name = @user_was.first_name  # 'John'
+    original_first_name = @user_was.first_name # 'John'
 
     # Even after the user is saved with new value, object_was should retain old value
     assert_equal 'John', original_first_name

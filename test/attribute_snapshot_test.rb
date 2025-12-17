@@ -5,11 +5,11 @@ require 'test_helper'
 class AttributeSnapshotTest < Minitest::Test
   def setup
     @snapshot = Beaconable::AttributeSnapshot.new({
-      name: 'John',
-      age: 30,
-      active: true,
-      score: nil
-    })
+                                                    name: 'John',
+                                                    age: 30,
+                                                    active: true,
+                                                    score: nil
+                                                  })
   end
 
   def test_method_access
@@ -51,9 +51,9 @@ class AttributeSnapshotTest < Minitest::Test
 
   def test_to_h_returns_unfrozen_copy
     hash = @snapshot.to_h
-    hash[:name] = 'Modified'  # Should not raise
+    hash[:name] = 'Modified' # Should not raise
     assert_equal 'Modified', hash[:name]
-    assert_equal 'John', @snapshot.name  # Original unchanged
+    assert_equal 'John', @snapshot.name # Original unchanged
   end
 
   def test_inspect_output

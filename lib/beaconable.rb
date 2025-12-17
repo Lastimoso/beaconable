@@ -8,6 +8,7 @@ require 'active_record'
 
 module Beaconable
   extend ActiveSupport::Concern
+
   included do
     attr_accessor :beacon_metadata
     attr_accessor :skip_beacon

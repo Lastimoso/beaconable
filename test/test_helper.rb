@@ -1,16 +1,18 @@
-$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
+# frozen_string_literal: true
 
-require "minitest/autorun"
-require "minitest/spec"
-require "minitest/reporters"
-require "active_support"
-require "active_record"
-require "debug"
-require "beaconable"
+$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
+
+require 'minitest/autorun'
+require 'minitest/spec'
+require 'minitest/reporters'
+require 'active_support'
+require 'active_record'
+require 'debug'
+require 'beaconable'
 
 Minitest::Reporters.use!
 
-ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":memory:")
+ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: ':memory:')
 
 class User < ActiveRecord::Base
   include Beaconable
@@ -27,9 +29,7 @@ class UserBeacon < Beaconable::BaseBeacon
     SideEffect.create do |side_effect|
       side_effect.name = 'default'
       side_effect.success = true
-      if beacon_metadata.present?
-        side_effect.source = beacon_metadata.dig(:source)
-      end
+      side_effect.source = beacon_metadata[:source] if beacon_metadata.present?
     end
     test_field_changed
     test_chained_methods
@@ -59,11 +59,11 @@ end
 
 def setup_db
   ActiveRecord::Migration.suppress_messages do
-    ActiveRecord::Schema.define(:version => 1) do
+    ActiveRecord::Schema.define(version: 1) do
       create_table :users do |t|
-        t.string :email, :limit => 255, :null => false
-        t.string :first_name, :limit => 100, :null => true
-        t.string :last_name, :limit => 100, :null => true
+        t.string :email, limit: 255, null: false
+        t.string :first_name, limit: 100, null: true
+        t.string :last_name, limit: 100, null: true
         t.timestamps null: false
       end
       create_table :side_effects do |t|
