@@ -3,9 +3,15 @@ AllCops:
   TargetRubyVersion: 3.2
   SuggestExtensions: false
   Exclude:
-    - 'vendor/**/*'
-    - 'bin/*'
-    - '*.gemspec'
+    - "vendor/**/*"
+    - "bin/*"
+    - "*.gemspec"
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
 
 Style/Documentation:
   Enabled: false

@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require 'test_helper'
+require "test_helper"
 
 class ObjectWasTest < Minitest::Test
   def setup
     setup_db
-    @user = User.create(first_name: 'John',
-                        last_name: 'Rambo',
-                        email: 'john@rambo.com')
-    @user.first_name = 'Bruce'
+    @user = User.create(first_name: "John",
+                        last_name: "Rambo",
+                        email: "john@rambo.com")
+    @user.first_name = "Bruce"
     @user_was = Beaconable::ObjectWas.new(@user).call
     @user.save!
   end
@@ -19,8 +19,8 @@ class ObjectWasTest < Minitest::Test
 
   def test_object_was_has_previous_field
     refute_equal @user.first_name, @user_was.first_name
-    assert_equal 'Bruce', @user.first_name
-    assert_equal 'John', @user_was.first_name
+    assert_equal "Bruce", @user.first_name
+    assert_equal "John", @user_was.first_name
   end
 
   def test_object_was_keeps_other_fields
@@ -41,7 +41,7 @@ class ObjectWasTest < Minitest::Test
   end
 
   def test_object_was_for_new_record_has_nil_values
-    new_user = User.new(first_name: 'Test', last_name: 'User', email: 'test@test.com')
+    new_user = User.new(first_name: "Test", last_name: "User", email: "test@test.com")
     user_was = Beaconable::ObjectWas.new(new_user).call
 
     assert_nil user_was.first_name
@@ -62,7 +62,7 @@ class ObjectWasTest < Minitest::Test
     original_first_name = @user_was.first_name # 'John'
 
     # Even after the user is saved with new value, object_was should retain old value
-    assert_equal 'John', original_first_name
-    assert_equal 'Bruce', @user.first_name
+    assert_equal "John", original_first_name
+    assert_equal "Bruce", @user.first_name
   end
 end

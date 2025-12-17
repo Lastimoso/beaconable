@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
-$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
+$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 
-require 'minitest/autorun'
-require 'minitest/spec'
-require 'minitest/reporters'
-require 'active_support'
-require 'active_record'
-require 'debug'
-require 'beaconable'
+require "minitest/autorun"
+require "minitest/spec"
+require "minitest/reporters"
+require "active_support"
+require "active_record"
+require "debug"
+require "beaconable"
 
 Minitest::Reporters.use!
 
-ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: ':memory:')
+ActiveRecord::Base.establish_connection(adapter: "sqlite3", database: ":memory:")
 
 class User < ActiveRecord::Base
   include Beaconable
@@ -27,7 +27,7 @@ class UserBeacon < Beaconable::BaseBeacon
 
   def call
     SideEffect.create do |side_effect|
-      side_effect.name = 'default'
+      side_effect.name = "default"
       side_effect.success = true
       side_effect.source = beacon_metadata[:source] if beacon_metadata.present?
     end
@@ -39,21 +39,21 @@ class UserBeacon < Beaconable::BaseBeacon
   private
 
   def test_destroyed_record
-    SideEffect.create(name: 'destroyed_user', success: true) if destroyed_entry?
+    SideEffect.create(name: "destroyed_user", success: true) if destroyed_entry?
   end
 
   def test_field_changed
-    SideEffect.create(name: 'new_first_name', success: true) if field_changed?(:first_name)
+    SideEffect.create(name: "new_first_name", success: true) if field_changed?(:first_name)
   end
 
   def test_chained_methods
-    SideEffect.create(name: 'nested_conditions', success: true) if chained_methods_conditions?
+    SideEffect.create(name: "nested_conditions", success: true) if chained_methods_conditions?
   end
 
   def chained_methods_conditions?
     field_changed(:email)
-      .from('john@rambo.com', 'jack@bauer.com')
-      .to('peter@parker.com', 'john@wick.com')
+      .from("john@rambo.com", "jack@bauer.com")
+      .to("peter@parker.com", "john@wick.com")
   end
 end
 

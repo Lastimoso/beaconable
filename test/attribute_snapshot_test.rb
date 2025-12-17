@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'test_helper'
+require "test_helper"
 
 class AttributeSnapshotTest < Minitest::Test
   def setup
     @snapshot = Beaconable::AttributeSnapshot.new({
-                                                    name: 'John',
+                                                    name: "John",
                                                     age: 30,
                                                     active: true,
                                                     score: nil
@@ -13,19 +13,19 @@ class AttributeSnapshotTest < Minitest::Test
   end
 
   def test_method_access
-    assert_equal 'John', @snapshot.name
+    assert_equal "John", @snapshot.name
     assert_equal 30, @snapshot.age
     assert_equal true, @snapshot.active
   end
 
   def test_bracket_access_with_symbol
-    assert_equal 'John', @snapshot[:name]
+    assert_equal "John", @snapshot[:name]
     assert_equal 30, @snapshot[:age]
   end
 
   def test_bracket_access_with_string
-    assert_equal 'John', @snapshot['name']
-    assert_equal 30, @snapshot['age']
+    assert_equal "John", @snapshot["name"]
+    assert_equal 30, @snapshot["age"]
   end
 
   def test_respond_to_for_existing_attributes
@@ -46,21 +46,21 @@ class AttributeSnapshotTest < Minitest::Test
   def test_to_h_returns_hash_copy
     hash = @snapshot.to_h
     assert_instance_of Hash, hash
-    assert_equal({ name: 'John', age: 30, active: true, score: nil }, hash)
+    assert_equal({ name: "John", age: 30, active: true, score: nil }, hash)
   end
 
   def test_to_h_returns_unfrozen_copy
     hash = @snapshot.to_h
-    hash[:name] = 'Modified' # Should not raise
-    assert_equal 'Modified', hash[:name]
-    assert_equal 'John', @snapshot.name # Original unchanged
+    hash[:name] = "Modified" # Should not raise
+    assert_equal "Modified", hash[:name]
+    assert_equal "John", @snapshot.name # Original unchanged
   end
 
   def test_inspect_output
     result = @snapshot.inspect
-    assert_includes result, 'AttributeSnapshot'
-    assert_includes result, 'name'
-    assert_includes result, 'John'
+    assert_includes result, "AttributeSnapshot"
+    assert_includes result, "name"
+    assert_includes result, "John"
   end
 
   def test_nil_values_are_preserved
